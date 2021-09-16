@@ -6,8 +6,13 @@ module.exports = {
       ...theme("colors"),
       primary: "#FC354C",
       secondary: "#0ABFBC",
-      grad1: "#141E30",
-      grad2: "#243B55",
+    }),
+    backgroundColor: (theme) => ({
+      ...theme("colors"),
+      blueLight: "#00ACD3",
+      blueDark: "#0098BA",
+      emerald: "#0ABFBC",
+      emeraldDark: "#0BAAA7",
     }),
   },
   variants: {

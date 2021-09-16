@@ -29,6 +29,7 @@ export type Bills = {
   orders: Array<Orders>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  firstThreeOrders?: Maybe<Array<Orders>>;
 };
 
 export type ChangePasswordInput = {
@@ -231,7 +232,7 @@ export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 
 export type GetUnsettledBillsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUnsettledBillsQuery = { __typename?: 'Query', getUnsettledBills?: Maybe<Array<{ __typename?: 'Bills', bill_id: string, table_no: number, netAmount: number, createdAt: string }>> };
+export type GetUnsettledBillsQuery = { __typename?: 'Query', getUnsettledBills?: Maybe<Array<{ __typename?: 'Bills', bill_id: string, table_no: number, netAmount: number, createdAt: string, firstThreeOrders?: Maybe<Array<{ __typename?: 'Orders', itemName: string, quantity: number }>> }>> };
 
 export type IsLoggedQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -439,6 +440,10 @@ export const GetUnsettledBillsDocument = gql`
     bill_id
     table_no
     netAmount
+    firstThreeOrders {
+      itemName
+      quantity
+    }
     createdAt
   }
 }

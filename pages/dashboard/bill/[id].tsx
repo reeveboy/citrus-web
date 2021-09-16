@@ -52,18 +52,8 @@ const Bill = () => {
             <Form className="flex mt-3">
 
             
-              {/* <AutoComplete items={items.items} /> */}
               <TypeAhead items={items} setSelected={setSelected} />
-              {/* <input
-                className="shadow-md appearance-none border rounded py-1 px-3 text-grey-darker"
-                name="item"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.item}
-                placeholder="Search an item..."
-                type="text"
-                autoComplete="off"
-              /> */}
+              
               <input
                 className="ml-4 shadow-md w-24 appearance-none border rounded py-1 px-3 text-grey-darker"
                 name="quantity"

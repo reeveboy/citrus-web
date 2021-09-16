@@ -3,6 +3,10 @@ query getUnsettledBills {
     bill_id
     table_no
     netAmount
+    firstThreeOrders {
+      itemName
+      quantity
+    }
     createdAt
   }
 }

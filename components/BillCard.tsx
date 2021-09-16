@@ -1,5 +1,4 @@
 import Link from "next/link";
-import withApollo from "../lib/withApollo";
 
 const BillCard = ({ bill }) => {
   const time = new Date(parseInt(bill.createdAt, 10))
@@ -9,16 +8,41 @@ const BillCard = ({ bill }) => {
   if (!bill) {
     return <div>Bill not found</div>;
   }
+
+  console.log(bill);
   return (
     <Link
       href={`/dashboard/bill/[id]?id=${bill.bill_id}`}
       as={`/dashboard/bill/${bill.bill_id}`}>
-      <div className="p-2 shadow-md border h-28 w-52 rounded-lg relative flex flex-col justify-center items-center">
-        <span className=" block text-xl font-semibold">
-          Table No: {bill.table_no}
-        </span>
-        <span className="absolute top-0 right-1 text-xs">{time}</span>
-        <span>Net Amount: ${bill.netAmount}</span>
+      <div
+        className=" border rounded-lg flex flex-col text-white"
+        style={{ width: "200px", height: "260px", cursor: "pointer" }}>
+        <div className="flex justify-between p-2 rounded-t-lg bg-blueDark">
+          <span className="text-xl font-semibold">T - {bill.table_no}</span>
+          <span className="text-xl">{time}</span>
+        </div>
+        <div className="h-full rounded-b-lg flex flex-col bg-blueLight">
+          <div className="p-2" style={{ flex: "6" }}>
+            {bill.firstThreeOrders.length !== 0 ? (
+              <div className="flex flex-col">
+                {bill.firstThreeOrders.map((order) => (
+                  <div className="flex justify-between">
+                    <span className="font-extralight truncate">
+                      {order.itemName}
+                    </span>
+                    <span className="font-extralight">{order.quantity}</span>
+                  </div>
+                ))}
+                <span className="text-lg">. . .</span>
+              </div>
+            ) : (
+              <span className="font-extralight">No orders just yet...</span>
+            )}
+          </div>
+          <span className="text-center" style={{ flex: "1" }}>
+            Net Amount: &#8377;{bill.netAmount}
+          </span>
+        </div>
       </div>
     </Link>
   );
