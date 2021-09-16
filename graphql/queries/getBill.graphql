@@ -1,0 +1,15 @@
+query GetBill($bill_id: Int!) {
+  getBill(bill_id: $bill_id) {
+    bill_id
+    table_no
+    netAmount
+    orders {
+      item_id
+      quantity
+      total
+      itemName
+      itemRate
+    }
+    createdAt
+  }
+}

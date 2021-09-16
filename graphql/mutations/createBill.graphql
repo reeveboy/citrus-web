@@ -1,0 +1,8 @@
+mutation CreateBill($table_no: Int!) {
+  createBill(table_no: $table_no) {
+    bill_id
+    table_no
+    netAmount
+    createdAt
+  }
+}

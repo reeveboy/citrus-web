@@ -1,0 +1,8 @@
+query GetItems {
+  items {
+    item_id
+    name
+    rate
+    category
+  }
+}
