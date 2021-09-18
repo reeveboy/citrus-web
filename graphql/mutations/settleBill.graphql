@@ -1,0 +1,3 @@
+mutation SettleBill($bill_id: Int!) {
+  settleBill(bill_id: $bill_id)
+}

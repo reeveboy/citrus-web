@@ -1,0 +1,5 @@
+mutation UpdateOrder($bill_id: Int!, $item_id: Int!, $quantity: Int!) {
+  updateOrder(
+    input: { bill_id: $bill_id, item_id: $item_id, quantity: $quantity }
+  )
+}

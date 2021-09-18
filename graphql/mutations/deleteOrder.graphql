@@ -1,0 +1,3 @@
+mutation DeleteOrder($item_id: Int!, $bill_id: Int!) {
+  deleteOrder(item_id: $item_id, bill_id: $bill_id)
+}

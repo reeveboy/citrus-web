@@ -25,3 +25,8 @@ body {
   background: rgba(97, 97, 97, 0.363);
 }
 /* Scroll Wheel Css -------------------> End */
+
+a {
+  text-decoration: none;
+  color: #000;
+}

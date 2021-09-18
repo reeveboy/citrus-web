@@ -209,6 +209,21 @@ export type CreateBillMutationVariables = Exact<{
 
 export type CreateBillMutation = { __typename?: 'Mutation', createBill: { __typename?: 'Bills', bill_id: string, table_no: number, netAmount: number, createdAt: string } };
 
+export type DeleteBillMutationVariables = Exact<{
+  bill_id: Scalars['Int'];
+}>;
+
+
+export type DeleteBillMutation = { __typename?: 'Mutation', deleteBill: boolean };
+
+export type DeleteOrderMutationVariables = Exact<{
+  item_id: Scalars['Int'];
+  bill_id: Scalars['Int'];
+}>;
+
+
+export type DeleteOrderMutation = { __typename?: 'Mutation', deleteOrder: boolean };
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -216,6 +231,22 @@ export type LoginMutationVariables = Exact<{
 
 
 export type LoginMutation = { __typename?: 'Mutation', login?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string, createdAt: string, updatedAt: string }> };
+
+export type SettleBillMutationVariables = Exact<{
+  bill_id: Scalars['Int'];
+}>;
+
+
+export type SettleBillMutation = { __typename?: 'Mutation', settleBill: boolean };
+
+export type UpdateOrderMutationVariables = Exact<{
+  bill_id: Scalars['Int'];
+  item_id: Scalars['Int'];
+  quantity: Scalars['Int'];
+}>;
+
+
+export type UpdateOrderMutation = { __typename?: 'Mutation', updateOrder: boolean };
 
 export type GetBillQueryVariables = Exact<{
   bill_id: Scalars['Int'];
@@ -314,6 +345,69 @@ export function useCreateBillMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateBillMutationHookResult = ReturnType<typeof useCreateBillMutation>;
 export type CreateBillMutationResult = Apollo.MutationResult<CreateBillMutation>;
 export type CreateBillMutationOptions = Apollo.BaseMutationOptions<CreateBillMutation, CreateBillMutationVariables>;
+export const DeleteBillDocument = gql`
+    mutation DeleteBill($bill_id: Int!) {
+  deleteBill(bill_id: $bill_id)
+}
+    `;
+export type DeleteBillMutationFn = Apollo.MutationFunction<DeleteBillMutation, DeleteBillMutationVariables>;
+
+/**
+ * __useDeleteBillMutation__
+ *
+ * To run a mutation, you first call `useDeleteBillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBillMutation, { data, loading, error }] = useDeleteBillMutation({
+ *   variables: {
+ *      bill_id: // value for 'bill_id'
+ *   },
+ * });
+ */
+export function useDeleteBillMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBillMutation, DeleteBillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBillMutation, DeleteBillMutationVariables>(DeleteBillDocument, options);
+      }
+export type DeleteBillMutationHookResult = ReturnType<typeof useDeleteBillMutation>;
+export type DeleteBillMutationResult = Apollo.MutationResult<DeleteBillMutation>;
+export type DeleteBillMutationOptions = Apollo.BaseMutationOptions<DeleteBillMutation, DeleteBillMutationVariables>;
+export const DeleteOrderDocument = gql`
+    mutation DeleteOrder($item_id: Int!, $bill_id: Int!) {
+  deleteOrder(item_id: $item_id, bill_id: $bill_id)
+}
+    `;
+export type DeleteOrderMutationFn = Apollo.MutationFunction<DeleteOrderMutation, DeleteOrderMutationVariables>;
+
+/**
+ * __useDeleteOrderMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderMutation, { data, loading, error }] = useDeleteOrderMutation({
+ *   variables: {
+ *      item_id: // value for 'item_id'
+ *      bill_id: // value for 'bill_id'
+ *   },
+ * });
+ */
+export function useDeleteOrderMutation(baseOptions?: Apollo.MutationHookOptions<DeleteOrderMutation, DeleteOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
+      }
+export type DeleteOrderMutationHookResult = ReturnType<typeof useDeleteOrderMutation>;
+export type DeleteOrderMutationResult = Apollo.MutationResult<DeleteOrderMutation>;
+export type DeleteOrderMutationOptions = Apollo.BaseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -352,6 +446,70 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const SettleBillDocument = gql`
+    mutation SettleBill($bill_id: Int!) {
+  settleBill(bill_id: $bill_id)
+}
+    `;
+export type SettleBillMutationFn = Apollo.MutationFunction<SettleBillMutation, SettleBillMutationVariables>;
+
+/**
+ * __useSettleBillMutation__
+ *
+ * To run a mutation, you first call `useSettleBillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSettleBillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [settleBillMutation, { data, loading, error }] = useSettleBillMutation({
+ *   variables: {
+ *      bill_id: // value for 'bill_id'
+ *   },
+ * });
+ */
+export function useSettleBillMutation(baseOptions?: Apollo.MutationHookOptions<SettleBillMutation, SettleBillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SettleBillMutation, SettleBillMutationVariables>(SettleBillDocument, options);
+      }
+export type SettleBillMutationHookResult = ReturnType<typeof useSettleBillMutation>;
+export type SettleBillMutationResult = Apollo.MutationResult<SettleBillMutation>;
+export type SettleBillMutationOptions = Apollo.BaseMutationOptions<SettleBillMutation, SettleBillMutationVariables>;
+export const UpdateOrderDocument = gql`
+    mutation UpdateOrder($bill_id: Int!, $item_id: Int!, $quantity: Int!) {
+  updateOrder(input: {bill_id: $bill_id, item_id: $item_id, quantity: $quantity})
+}
+    `;
+export type UpdateOrderMutationFn = Apollo.MutationFunction<UpdateOrderMutation, UpdateOrderMutationVariables>;
+
+/**
+ * __useUpdateOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderMutation, { data, loading, error }] = useUpdateOrderMutation({
+ *   variables: {
+ *      bill_id: // value for 'bill_id'
+ *      item_id: // value for 'item_id'
+ *      quantity: // value for 'quantity'
+ *   },
+ * });
+ */
+export function useUpdateOrderMutation(baseOptions?: Apollo.MutationHookOptions<UpdateOrderMutation, UpdateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateOrderMutation, UpdateOrderMutationVariables>(UpdateOrderDocument, options);
+      }
+export type UpdateOrderMutationHookResult = ReturnType<typeof useUpdateOrderMutation>;
+export type UpdateOrderMutationResult = Apollo.MutationResult<UpdateOrderMutation>;
+export type UpdateOrderMutationOptions = Apollo.BaseMutationOptions<UpdateOrderMutation, UpdateOrderMutationVariables>;
 export const GetBillDocument = gql`
     query GetBill($bill_id: Int!) {
   getBill(bill_id: $bill_id) {

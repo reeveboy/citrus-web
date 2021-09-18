@@ -13,6 +13,10 @@ module.exports = {
       blueDark: "#0098BA",
       emerald: "#0ABFBC",
       emeraldDark: "#0BAAA7",
+      redLight: "#FC364D",
+      redDark: "#EC364B",
+      purpleLight: "#6898DF",
+      purpleDark: "#4586E5",
     }),
   },
   variants: {

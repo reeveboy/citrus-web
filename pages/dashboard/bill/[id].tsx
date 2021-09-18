@@ -3,8 +3,11 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Orders from "../../../components/Orders";
 import TypeAhead from "../../../components/TypeAhead";
-import { GetBillDocument, useAddOrderMutation, useGetBillQuery, useGetItemsQuery, useMeQuery } from "../../../generated";
+import { GetBillDocument, GetUnsettledBillsDocument, useAddOrderMutation, useDeleteBillMutation, useGetBillQuery, useGetItemsQuery, useMeQuery, useSettleBillMutation } from "../../../generated";
 import withApollo from "../../../lib/withApollo";
+import {Form as form} from 'react-bootstrap'
+import PlusBtn from "../../../components/PlusBtn";
+import DeleteBillButton from "../../../components/DeleteBillButton";
 
 
 const Bill = () => {
@@ -26,7 +29,14 @@ const Bill = () => {
   const {data: items, loading: i_loading} = useGetItemsQuery()
   const [selected, setSelected] = useState(null)
 
-  const [addOrder] = useAddOrderMutation({refetchQueries: [GetBillDocument, 'getBill']})
+  const [addOrder] = useAddOrderMutation({refetchQueries: [GetBillDocument]})
+
+  const [settleBill] = useSettleBillMutation()
+
+  const handleSettleBill = async () => {
+    await settleBill({variables: {bill_id: parseInt(bill.getBill.bill_id)}})
+    router.push('/dashboard')
+  }
 
   if (loading || !user || b_loading || i_loading) {
     return <div>Loading..</div>;
@@ -37,50 +47,96 @@ const Bill = () => {
   }
 
   return (
-    <div>
-      <div className="flex flex-col justify-center">
-        <h2 className="text-2xl ">Table Number: {bill.getBill.table_no}</h2>
-        <Formik
-          initialValues={{ quantity: null }}
-          onSubmit={async (values, { setSubmitting }) => {
-            setSubmitting(true)
-            await addOrder({variables: {bill_id, item_id: parseInt(selected[0].item_id), quantity: values.quantity}})
+    <div className="flex h-full">
+      <div className="flex flex-col border-r border-black pr-2" style={{flex: '3'}}>
+        <div className="flex justify-between items-center">
+          <span className="text-3xl font">T - {bill.getBill.table_no}</span>
+          <div>
+            <Formik
+              initialValues={{ quantity: null }}
+              onSubmit={async (values, { setSubmitting }) => {
+                setSubmitting(true)
+                if (selected.length === 0) {
+                  setSubmitting(false);
+                  return
+                }
+                if (values.quantity === 0 || values.quantity === null) {
+                  setSubmitting(false);
+                  return
+                }
+                await addOrder({variables: {bill_id, item_id: parseInt(selected[0].item_id), quantity: values.quantity}})
 
-            setSubmitting(false);
-          }}>
-          {({ handleChange, handleBlur, values, isSubmitting }) => (
-            <Form className="flex mt-3">
+                values.quantity = '1'
+                setSelected([])
+                setSubmitting(false);
+              }}>
+              {({ handleChange, handleBlur, values, isSubmitting }) => (
+                <Form className="flex">
+                  <TypeAhead items={items} setSelected={setSelected} />
+                  
+                  <form.Control 
+                    className="ml-2"
+                    style={{width: '60px', height: '40px'}}
+                    size="sm"
+                    name="quantity"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.quantity}
+                    placeholder="Qty"
+                    type="number"
+                  />
 
-            
-              <TypeAhead items={items} setSelected={setSelected} />
-              
-              <input
-                className="ml-4 shadow-md w-24 appearance-none border rounded py-1 px-3 text-grey-darker"
-                name="quantity"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.quantity}
-                placeholder="Qty"
-                type="number"
-              />
-              <button
-                className="ml-4 hover:bg-blue-700 shadow bg-blue-500 rounded px-3 py-1 text-white"
-                type="submit"
-                disabled={isSubmitting}>
-                <p className="text-gray-200">Add</p>
-              </button>
-            </Form>
-          )}
-        </Formik>
-        <Orders orders={bill.getBill.orders} />
-        <div className="text-xl mt-4 flex justify-between">
-          <span>
-            Net Amount: <span>&#8377;</span>
-            {bill.getBill.netAmount}
-          </span>
-          <button className="rounded-lg bg-green-400 px-4 py-1 text-white">
-            Settle
-          </button>
+                  <button
+                    className="ml-2"
+                    type="submit"
+                    disabled={isSubmitting}>
+                    <PlusBtn />
+                  </button>
+                  
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+
+      <Orders orders={bill.getBill.orders} bill_id={bill_id} />
+      </div>
+      <div className="flex justify-center items-center h-full" style={{flex: '2'}}>
+        <div className="flex flex-col">
+          <div className="flex flex-col">
+            <div className="flex flex-row justify-between">
+              <span className="text-xl">Total: </span>
+              <span className="text-xl">&#8377;{bill.getBill.netAmount}.00</span>
+            </div>
+            <div className="mt-1 flex flex-row justify-between items-center">
+              <button className="text-xl bg-blueLight px-1 py-1 rounded-lg text-white hover:bg-blueDark">Offers: </button>
+              <span className="text-xl">&#8377;0.00</span>
+            </div>
+            <div className="mt-2 flex flex-row justify-between items-center">
+              <button className="text-xl bg-redLight px-1 py-1 rounded-lg text-white hover:bg-redDark">Tax: </button>
+              <span className="text-xl">&#8377;0.00</span>
+            </div>
+            <div className="mt-2 flex flex-row justify-between">
+              <span className="text-xl">Net Amount: </span>
+              <span className="text-xl">&#8377;{bill.getBill.netAmount}.00</span>
+            </div>
+          </div>
+          <div className="flex justify-center mt-4">
+            <button 
+              onClick={handleSettleBill}
+              disabled={bill.getBill.orders.length === 0}
+              className="px-2 py-2 text-xl bg-emerald rounded-lg text-white hover:bg-emeraldDark"
+            >
+              Settle Bill
+            </button>
+            <button
+              disabled={bill.getBill.orders.length === 0}
+              className="ml-4 px-2 py-2 text-xl bg-purpleLight rounded-lg text-white hover:bg-purpleDark"
+            >
+              Print Bill
+            </button>
+            <DeleteBillButton bill_id={bill.getBill.bill_id} />
+          </div>
         </div>
       </div>
     </div>

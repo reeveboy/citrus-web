@@ -18,10 +18,33 @@ function Dashboard() {
     }
   }, [user, loading]);
   // Auth Part - End
-  const {data: bills, loading: b_loading} = useGetUnsettledBillsQuery()
+  const {data: bills, loading: b_loading, refetch} = useGetUnsettledBillsQuery()
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   if (loading || !user || b_loading) {
     return <div>Loading..</div>;
+  }
+
+  if (bills.getUnsettledBills.length === 0) {
+    return (
+      <div className="h-full">
+        <div className="flex justify-between">
+          <span className="text-xl flex">Welcome Back,&nbsp;
+            <p className="font-bold"> {data.me.name.toLocaleUpperCase()}
+            </p>
+          </span>
+          <AddBill />
+        </div>
+
+        <div className="flex justify-center items-center h-full">
+          <span className="mb-20 font-extralight text-base text-gray-600">Looks like theres not much work for the day...</span>
+        </div>
+
+      </div>
+    )
   }
 
   return (

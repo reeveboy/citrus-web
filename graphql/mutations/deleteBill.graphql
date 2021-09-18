@@ -1,0 +1,3 @@
+mutation DeleteBill($bill_id: Int!) {
+  deleteBill(bill_id: $bill_id)
+}
