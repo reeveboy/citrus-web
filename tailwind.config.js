@@ -17,6 +17,8 @@ module.exports = {
       redDark: "#EC364B",
       purpleLight: "#6898DF",
       purpleDark: "#4586E5",
+      yellowLight: "#F1C40F",
+      yellowDark: "#E0B710",
     }),
   },
   variants: {
