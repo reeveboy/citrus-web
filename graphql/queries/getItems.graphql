@@ -1,8 +1,9 @@
-query GetItems {
-  items {
+query GetItems($search: String) {
+  items(search: $search) {
     item_id
     name
     rate
-    category
+    category_name
+    category_id
   }
 }

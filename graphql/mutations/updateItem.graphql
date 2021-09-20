@@ -1,0 +1,15 @@
+mutation UpdateItem(
+  $id: Int!
+  $name: String!
+  $rate: Float!
+  $category_id: Int!
+) {
+  updateItem(
+    input: { id: $id, name: $name, rate: $rate, category_id: $category_id }
+  ) {
+    item_id
+    name
+    rate
+    category_name
+  }
+}

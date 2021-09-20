@@ -1,15 +1,29 @@
 import React from "react";
 import { Formik, Form } from "formik";
+import { GetItemsDocument, useAddItemMutation } from "../generated";
 
-const AddItem = () => {
+const AddItem = ({ categories }) => {
+  const [addItem] = useAddItemMutation({ refetchQueries: [GetItemsDocument] });
   return (
     <div className="flex flex-col p-2 rounded-lg bg-gray-100">
       <span className="text-xl border-b border-black">Add New Item</span>
       <Formik
-        initialValues={{ name: "", rate: "", category: "" }}
-        onSubmit={async (values, { setSubmitting }) => {
+        initialValues={{ name: "", rate: "", category_id: "" }}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
           setSubmitting(true);
-          console.log(values);
+
+          if (!values.name || !values.rate || !values.category_id) {
+            return;
+          }
+
+          await addItem({
+            variables: {
+              name: values.name,
+              rate: parseInt(values.rate),
+              category_id: parseInt(values.category_id),
+            },
+          });
+          resetForm();
           setSubmitting(false);
         }}>
         {({ handleChange, handleBlur, values, isSubmitting }) => (
@@ -43,17 +57,22 @@ const AddItem = () => {
             </div>
             <div className="mt-2 flex justify-between items-center">
               <span className="text-lg">Category: </span>
-              <input
+              <select
                 className="rounded-lg px-2"
-                style={{ height: "40px" }}
-                name="category"
+                style={{ height: "40px", width: "210px" }}
+                name="category_id"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.category}
-                placeholder="Enter Category"
-                type="text"
-                autoComplete="off"
-              />
+                value={values.category_id}>
+                <option value="" selected>
+                  Select a Category
+                </option>
+                {categories.map((category, idx) => (
+                  <option key={idx} value={category.category_id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="mt-2 flex justify-center">
               <button

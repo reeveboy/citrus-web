@@ -1,0 +1,8 @@
+mutation AddItem($name: String!, $rate: Float!, $category_id: Int!) {
+  addItem(input: { name: $name, rate: $rate, category_id: $category_id }) {
+    item_id
+    name
+    rate
+    category_name
+  }
+}

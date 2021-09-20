@@ -32,6 +32,13 @@ export type Bills = {
   firstThreeOrders?: Maybe<Array<Orders>>;
 };
 
+export type Category = {
+  __typename?: 'Category';
+  category_id: Scalars['Float'];
+  name: Scalars['String'];
+  items: Array<Item>;
+};
+
 export type ChangePasswordInput = {
   password: Scalars['String'];
   token: Scalars['String'];
@@ -40,7 +47,7 @@ export type ChangePasswordInput = {
 export type CreateItemInput = {
   name: Scalars['String'];
   rate: Scalars['Float'];
-  category: Scalars['String'];
+  category_id: Scalars['Int'];
 };
 
 export type Item = {
@@ -48,10 +55,11 @@ export type Item = {
   item_id: Scalars['ID'];
   name: Scalars['String'];
   rate: Scalars['Float'];
-  category: Scalars['String'];
+  category_id: Scalars['Float'];
   ownerId: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+  category_name: Scalars['String'];
 };
 
 export type Mutation = {
@@ -62,7 +70,7 @@ export type Mutation = {
   forgotPassword: Scalars['Boolean'];
   changePassword?: Maybe<User>;
   logout: Scalars['Boolean'];
-  createItem: Item;
+  addItem: Item;
   updateItem?: Maybe<Item>;
   deleteItem: Scalars['Boolean'];
   createBill: Bills;
@@ -71,6 +79,7 @@ export type Mutation = {
   addOrder: Scalars['Boolean'];
   updateOrder: Scalars['Boolean'];
   deleteOrder: Scalars['Boolean'];
+  createCategory: Category;
 };
 
 
@@ -100,7 +109,7 @@ export type MutationChangePasswordArgs = {
 };
 
 
-export type MutationCreateItemArgs = {
+export type MutationAddItemArgs = {
   input: CreateItemInput;
 };
 
@@ -145,6 +154,11 @@ export type MutationDeleteOrderArgs = {
   bill_id: Scalars['Int'];
 };
 
+
+export type MutationCreateCategoryArgs = {
+  name: Scalars['String'];
+};
+
 export type Orders = {
   __typename?: 'Orders';
   item_id: Scalars['Float'];
@@ -164,6 +178,12 @@ export type Query = {
   items: Array<Item>;
   getBill?: Maybe<Bills>;
   getUnsettledBills?: Maybe<Array<Bills>>;
+  categories: Array<Category>;
+};
+
+
+export type QueryItemsArgs = {
+  search?: Maybe<Scalars['String']>;
 };
 
 
@@ -181,7 +201,7 @@ export type UpdateItemInput = {
   id: Scalars['Int'];
   name: Scalars['String'];
   rate: Scalars['Float'];
-  category: Scalars['String'];
+  category_id: Scalars['Int'];
 };
 
 export type User = {
@@ -192,6 +212,15 @@ export type User = {
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
+
+export type AddItemMutationVariables = Exact<{
+  name: Scalars['String'];
+  rate: Scalars['Float'];
+  category_id: Scalars['Int'];
+}>;
+
+
+export type AddItemMutation = { __typename?: 'Mutation', addItem: { __typename?: 'Item', item_id: string, name: string, rate: number, category_name: string } };
 
 export type AddOrderMutationVariables = Exact<{
   bill_id: Scalars['Int'];
@@ -216,6 +245,13 @@ export type DeleteBillMutationVariables = Exact<{
 
 export type DeleteBillMutation = { __typename?: 'Mutation', deleteBill: boolean };
 
+export type DeleteItemMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteItemMutation = { __typename?: 'Mutation', deleteItem: boolean };
+
 export type DeleteOrderMutationVariables = Exact<{
   item_id: Scalars['Int'];
   bill_id: Scalars['Int'];
@@ -239,6 +275,16 @@ export type SettleBillMutationVariables = Exact<{
 
 export type SettleBillMutation = { __typename?: 'Mutation', settleBill: boolean };
 
+export type UpdateItemMutationVariables = Exact<{
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  rate: Scalars['Float'];
+  category_id: Scalars['Int'];
+}>;
+
+
+export type UpdateItemMutation = { __typename?: 'Mutation', updateItem?: Maybe<{ __typename?: 'Item', item_id: string, name: string, rate: number, category_name: string }> };
+
 export type UpdateOrderMutationVariables = Exact<{
   bill_id: Scalars['Int'];
   item_id: Scalars['Int'];
@@ -255,10 +301,17 @@ export type GetBillQueryVariables = Exact<{
 
 export type GetBillQuery = { __typename?: 'Query', getBill?: Maybe<{ __typename?: 'Bills', bill_id: string, table_no: number, netAmount: number, createdAt: string, orders: Array<{ __typename?: 'Orders', item_id: number, quantity: number, total: number, itemName: string, itemRate: string }> }> };
 
-export type GetItemsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', item_id: string, name: string, rate: number, category: string }> };
+export type GetCategoriesQuery = { __typename?: 'Query', categories: Array<{ __typename?: 'Category', category_id: number, name: string }> };
+
+export type GetItemsQueryVariables = Exact<{
+  search?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetItemsQuery = { __typename?: 'Query', items: Array<{ __typename?: 'Item', item_id: string, name: string, rate: number, category_name: string, category_id: number }> };
 
 export type GetUnsettledBillsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -276,6 +329,44 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string }> };
 
 
+export const AddItemDocument = gql`
+    mutation AddItem($name: String!, $rate: Float!, $category_id: Int!) {
+  addItem(input: {name: $name, rate: $rate, category_id: $category_id}) {
+    item_id
+    name
+    rate
+    category_name
+  }
+}
+    `;
+export type AddItemMutationFn = Apollo.MutationFunction<AddItemMutation, AddItemMutationVariables>;
+
+/**
+ * __useAddItemMutation__
+ *
+ * To run a mutation, you first call `useAddItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addItemMutation, { data, loading, error }] = useAddItemMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      rate: // value for 'rate'
+ *      category_id: // value for 'category_id'
+ *   },
+ * });
+ */
+export function useAddItemMutation(baseOptions?: Apollo.MutationHookOptions<AddItemMutation, AddItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddItemMutation, AddItemMutationVariables>(AddItemDocument, options);
+      }
+export type AddItemMutationHookResult = ReturnType<typeof useAddItemMutation>;
+export type AddItemMutationResult = Apollo.MutationResult<AddItemMutation>;
+export type AddItemMutationOptions = Apollo.BaseMutationOptions<AddItemMutation, AddItemMutationVariables>;
 export const AddOrderDocument = gql`
     mutation AddOrder($bill_id: Int!, $item_id: Int!, $quantity: Int!) {
   addOrder(input: {bill_id: $bill_id, item_id: $item_id, quantity: $quantity})
@@ -376,6 +467,37 @@ export function useDeleteBillMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteBillMutationHookResult = ReturnType<typeof useDeleteBillMutation>;
 export type DeleteBillMutationResult = Apollo.MutationResult<DeleteBillMutation>;
 export type DeleteBillMutationOptions = Apollo.BaseMutationOptions<DeleteBillMutation, DeleteBillMutationVariables>;
+export const DeleteItemDocument = gql`
+    mutation DeleteItem($id: Int!) {
+  deleteItem(id: $id)
+}
+    `;
+export type DeleteItemMutationFn = Apollo.MutationFunction<DeleteItemMutation, DeleteItemMutationVariables>;
+
+/**
+ * __useDeleteItemMutation__
+ *
+ * To run a mutation, you first call `useDeleteItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteItemMutation, { data, loading, error }] = useDeleteItemMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteItemMutation(baseOptions?: Apollo.MutationHookOptions<DeleteItemMutation, DeleteItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteItemMutation, DeleteItemMutationVariables>(DeleteItemDocument, options);
+      }
+export type DeleteItemMutationHookResult = ReturnType<typeof useDeleteItemMutation>;
+export type DeleteItemMutationResult = Apollo.MutationResult<DeleteItemMutation>;
+export type DeleteItemMutationOptions = Apollo.BaseMutationOptions<DeleteItemMutation, DeleteItemMutationVariables>;
 export const DeleteOrderDocument = gql`
     mutation DeleteOrder($item_id: Int!, $bill_id: Int!) {
   deleteOrder(item_id: $item_id, bill_id: $bill_id)
@@ -477,6 +599,47 @@ export function useSettleBillMutation(baseOptions?: Apollo.MutationHookOptions<S
 export type SettleBillMutationHookResult = ReturnType<typeof useSettleBillMutation>;
 export type SettleBillMutationResult = Apollo.MutationResult<SettleBillMutation>;
 export type SettleBillMutationOptions = Apollo.BaseMutationOptions<SettleBillMutation, SettleBillMutationVariables>;
+export const UpdateItemDocument = gql`
+    mutation UpdateItem($id: Int!, $name: String!, $rate: Float!, $category_id: Int!) {
+  updateItem(
+    input: {id: $id, name: $name, rate: $rate, category_id: $category_id}
+  ) {
+    item_id
+    name
+    rate
+    category_name
+  }
+}
+    `;
+export type UpdateItemMutationFn = Apollo.MutationFunction<UpdateItemMutation, UpdateItemMutationVariables>;
+
+/**
+ * __useUpdateItemMutation__
+ *
+ * To run a mutation, you first call `useUpdateItemMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateItemMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateItemMutation, { data, loading, error }] = useUpdateItemMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      rate: // value for 'rate'
+ *      category_id: // value for 'category_id'
+ *   },
+ * });
+ */
+export function useUpdateItemMutation(baseOptions?: Apollo.MutationHookOptions<UpdateItemMutation, UpdateItemMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateItemMutation, UpdateItemMutationVariables>(UpdateItemDocument, options);
+      }
+export type UpdateItemMutationHookResult = ReturnType<typeof useUpdateItemMutation>;
+export type UpdateItemMutationResult = Apollo.MutationResult<UpdateItemMutation>;
+export type UpdateItemMutationOptions = Apollo.BaseMutationOptions<UpdateItemMutation, UpdateItemMutationVariables>;
 export const UpdateOrderDocument = gql`
     mutation UpdateOrder($bill_id: Int!, $item_id: Int!, $quantity: Int!) {
   updateOrder(input: {bill_id: $bill_id, item_id: $item_id, quantity: $quantity})
@@ -555,13 +718,49 @@ export function useGetBillLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetBillQueryHookResult = ReturnType<typeof useGetBillQuery>;
 export type GetBillLazyQueryHookResult = ReturnType<typeof useGetBillLazyQuery>;
 export type GetBillQueryResult = Apollo.QueryResult<GetBillQuery, GetBillQueryVariables>;
+export const GetCategoriesDocument = gql`
+    query GetCategories {
+  categories {
+    category_id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetCategoriesQuery__
+ *
+ * To run a query within a React component, call `useGetCategoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCategoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCategoriesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCategoriesQuery(baseOptions?: Apollo.QueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+      }
+export function useGetCategoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCategoriesQuery, GetCategoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCategoriesQuery, GetCategoriesQueryVariables>(GetCategoriesDocument, options);
+        }
+export type GetCategoriesQueryHookResult = ReturnType<typeof useGetCategoriesQuery>;
+export type GetCategoriesLazyQueryHookResult = ReturnType<typeof useGetCategoriesLazyQuery>;
+export type GetCategoriesQueryResult = Apollo.QueryResult<GetCategoriesQuery, GetCategoriesQueryVariables>;
 export const GetItemsDocument = gql`
-    query GetItems {
-  items {
+    query GetItems($search: String) {
+  items(search: $search) {
     item_id
     name
     rate
-    category
+    category_name
+    category_id
   }
 }
     `;
@@ -578,6 +777,7 @@ export const GetItemsDocument = gql`
  * @example
  * const { data, loading, error } = useGetItemsQuery({
  *   variables: {
+ *      search: // value for 'search'
  *   },
  * });
  */

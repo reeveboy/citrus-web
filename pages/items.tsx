@@ -1,11 +1,9 @@
 import { Form, Formik } from "formik";
-import { values } from "lodash";
 import { useRouter } from "next/router";
-import React, {useEffect} from "react";
-import AddCategory from "../components/AddCategory";
+import React, {useEffect, useState} from "react";
 import AddItem from "../components/AddItem";
 import Items from "../components/Items";
-import { useGetItemsQuery, useMeQuery } from "../generated";
+import { useGetCategoriesQuery, useGetItemsQuery, useMeQuery } from "../generated";
 import withApollo from "../lib/withApollo";
 
 const items = () => {
@@ -21,9 +19,21 @@ const items = () => {
   }, [user, loading]);
   // Auth Part - End
 
-  const {data: items, loading: i_loading} = useGetItemsQuery()
+  const {data: all_items, loading: i_loading, refetch} = useGetItemsQuery()
 
-  if (loading || !user || i_loading ) {
+  const {data: categories, loading: c_loading} = useGetCategoriesQuery()
+
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    refetch({search})
+  }, [search])
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value)
+  }
+
+  if (loading || !user || i_loading || c_loading ) {
     return <div>Loading..</div>;
   }
 
@@ -33,46 +43,36 @@ const items = () => {
       <div className="flex justify-between">
         <span className="text-3xl">/Restuarant Name/</span>
         <div>
-          <Formik
-            initialValues={{search: ''}}
-            onSubmit={async (values, {setSubmitting}) => {
-              setSubmitting(true)
-              console.log(values)
-              setSubmitting(false)
-            }}
-          >
-            {({handleChange, handleBlur, values, isSubmitting}) => (
-              <Form className="flex items-center">
-                <input  
-                  className="rounded-lg px-2 border"
-                  style={{ height: "40px" }}
-                  name="search"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.search}
-                  placeholder="Search an Item"
-                  type="text"
-                  autoComplete="off"
-                />
-                <button 
-                  className="ml-2 transform transition duration-150 ease-in hover:scale-125"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                  </svg>
-                </button>
-              </Form>
-            )}
-          </Formik>
+          <form  className="flex items-center">
+            <input  
+              className="rounded-lg px-2 border"
+              style={{ height: "40px" }}
+              name="search"
+              onChange={handleSearchChange}
+              value={search}
+              placeholder="Search an Item"
+              type="text"
+              autoComplete="off"
+            />
+            <button 
+              className="ml-2 transform transition duration-150 ease-in hover:scale-125"
+              type="submit"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
-      <Items items={items.items} />
+      <div className=" overflow-y-scroll ">
+
+      <Items items={all_items.items} categories={categories.categories} />
+      </div>
     </div>
-    <div className="flex flex-col pl-2 h-full justify-center" style={{flex: '2'}}>
-      <AddItem />
-      <AddCategory />
+    <div className="flex flex-col pl-2 h-full justify-start" style={{flex: '2'}}>
+      <AddItem categories={categories.categories} />
+      {/* <AddCategory /> */}
       <div className="mt-2 flex justify-center">
         <button style={{height: '50px'}} className="mr-4 flex items-center text-white px-3 rounded-lg bg-yellowLight hover:bg-yellowDark">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
