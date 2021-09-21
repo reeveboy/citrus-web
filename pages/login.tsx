@@ -3,6 +3,7 @@ import { MeDocument, MeQuery, useLoginMutation, useMeQuery } from "../generated/
 import { useRouter } from "next/router";
 import withApollo from "../lib/withApollo";
 import { useEffect } from "react";
+import Layout from "../components/Layout";
 
 const Login = () => {
   const router = useRouter();
@@ -17,9 +18,14 @@ const Login = () => {
   }, [user, loading]);
 
   if (loading || user) {
-    return <div>Loading..</div>;
+    return (
+    <Layout>
+      <div>Loading..</div>
+    </Layout>
+    );
   }
   return (
+    <Layout>
       <div className="bg-white w-96 rounded-lg flex flex-col items-center px-3 py-6">
         <h3 className="text-3xl font-semibold">Login</h3>
         <p className="mt-1">
@@ -50,7 +56,7 @@ const Login = () => {
             }
           }}>
           {({ isSubmitting, handleChange, handleBlur, values }) => (
-            <Form className="mt-2 w-4/5">
+            <Form className="w-4/5">
               <input
                 className="shadow-md appearance-none w-full mt-4 border rounded py-2 px-3 text-grey-darker"
                 name="email"
@@ -71,10 +77,10 @@ const Login = () => {
                 type="password"
               />
               <button
-                className="hover:bg-blue-700 shadow bg-blue-500 rounded mt-4 px-3 py-1 w-full text-gray-600"
+                className="hover:bg-blue-700 shadow bg-blue-500 text-white text-center rounded mt-4 px-3 py-2 w-full "
                 type="submit"
                 disabled={isSubmitting}>
-                <p className="text-gray-200">Log in</p>
+                Log in
               </button>
             </Form>
           )}
@@ -83,6 +89,7 @@ const Login = () => {
           Forgot Password?
         </a>
       </div>
+    </Layout>
   );
 };
 

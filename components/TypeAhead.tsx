@@ -4,7 +4,7 @@ const TypeAhead = ({ items, setSelected }) => {
   return (
     <Typeahead
       id="typeahead"
-      style={{ width: "160px", height: "40px" }}
+      style={{ height: "40px" }}
       labelKey="name"
       onChange={(item) => {
         setSelected(item);

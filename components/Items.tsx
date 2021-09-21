@@ -28,7 +28,7 @@ const Items = ({ items, categories }) => {
                 <span>&#8377;</span>
                 {item.rate}
               </td>
-              <td className="border py-2">{item.category_name}</td>
+              <td className="border py-2 truncate">{item.category_name}</td>
               <td className="border py-2 ">
                 <EditItemButton item={item} categories={categories} />
               </td>

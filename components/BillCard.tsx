@@ -9,11 +9,8 @@ const BillCard = ({ bill }) => {
     return <div>Bill not found</div>;
   }
 
-  console.log(bill);
   return (
-    <Link
-      href={`/dashboard/bill/[id]?id=${bill.bill_id}`}
-      as={`/dashboard/bill/${bill.bill_id}`}>
+    <Link href={`/bill/[id]?id=${bill.bill_id}`} as={`/bill/${bill.bill_id}`}>
       <a>
         <div
           className=" border rounded-lg flex flex-col text-black"

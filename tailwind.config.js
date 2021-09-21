@@ -19,7 +19,17 @@ module.exports = {
       purpleDark: "#4586E5",
       yellowLight: "#F1C40F",
       yellowDark: "#E0B710",
+      logoColor: "#0E306C",
+      sideBarActiveButton: "#E3EDFE",
+      sideBarActiveButtonLine: "#0066FF",
     }),
+    textColor: {
+      logoColor: "#0E306C",
+      sideBarButtons: "#C4CDDE",
+      sideBarButtonHover: "#999FAB",
+      sideBarActiveButton: "#80B2FE",
+      sideBarActiveButtonHover: "#5196FF",
+    },
   },
   variants: {
     extend: {},
