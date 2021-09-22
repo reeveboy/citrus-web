@@ -6,6 +6,7 @@ import Items from "../components/Items";
 import Layout from "../components/Layout";
 import { useGetCategoriesQuery, useGetItemsQuery, useMeQuery } from "../generated";
 import withApollo from "../lib/withApollo";
+import {capitalize} from '../utils/capitalize'
 
 const items = () => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const items = () => {
     <div className="flex h-full">
       <div className="flex flex-col border-r border-black pr-2" style={{flex: '3'}}>
         <div className="flex justify-between">
-          <span className="text-3xl">/Restuarant Name/</span>
+          <span className="text-3xl">{capitalize(user.name)} - Items</span>
           <div>
             <form  className="flex items-center">
               <input  

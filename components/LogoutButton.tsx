@@ -30,8 +30,8 @@ const LogoutButton = () => {
         className="text-sideBarButtons hover:text-sideBarButtonHover absolute bottom-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="25"
-          height="25"
+          width="30"
+          height="30"
           fill="currentColor"
           className="bi bi-box-arrow-left"
           viewBox="0 0 16 16">
@@ -56,6 +56,7 @@ const LogoutButton = () => {
           <span className="text-lg">Do you want to logout?</span>
           <div className="mt-2">
             <button
+              type="submit"
               onClick={handleLogout}
               className="bg-red-500 text-white rounded-md px-3 py-2 w-20 hover:bg-red-700">
               Yes

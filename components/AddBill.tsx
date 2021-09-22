@@ -50,7 +50,7 @@ const AddBill = () => {
             {({ isSubmitting, handleChange, handleBlur, values }) => (
               <Form className="flex justify-around w-1/2">
                 <input
-                  className="shadow-md appearance-none border rounded py-2 px-3 text-grey-darker"
+                  className=" border rounded py-2 px-3 text-grey-darker"
                   name="tableNo"
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -62,7 +62,7 @@ const AddBill = () => {
                 />
 
                 <button
-                  className="hover:bg-blue-700 shadow bg-blue-500 rounded  px-3 py-1  text-white text-center"
+                  className="hover:bg-blue-700 bg-blue-500 rounded  px-3 py-1  text-white text-center"
                   type="submit"
                   disabled={isSubmitting}>
                   Submit

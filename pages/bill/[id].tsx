@@ -109,7 +109,7 @@ const Bill = () => {
         <Orders orders={bill.getBill.orders} bill_id={bill_id} />
         </div>
         <div className="flex justify-center items-center h-full" style={{flex: '2'}}>
-          <div className="flex flex-col">
+          <div className="flex flex-col bg-gray-100 p-2 rounded-lg">
             <div className="flex flex-col">
               <div className="flex flex-row justify-between">
                 <span className="text-xl">Total: </span>

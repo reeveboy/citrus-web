@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import LogoutButton from "./LogoutButton";
+import DropDown from "./DropDown";
 
 export const Layout = ({ children }) => {
   const router = useRouter();
@@ -143,13 +144,14 @@ export const Layout = ({ children }) => {
               </div>
               <LogoutButton />
             </div>
-            <div className="flex flex-col">
-              <div className="w-full h-14 border-b flex items-center p-2">
+            <div className="flex flex-col w-full">
+              <div className="h-14 border-b inline-flex items-center justify-between p-2">
                 <Link href={`/dashboard`} as={`/dashboard`}>
                   <a>
                     <span className="text-3xl">CITRUS</span>
                   </a>
                 </Link>
+                <DropDown />
               </div>
               <div className="p-2 overflow-y-auto h-full">{children}</div>
             </div>
