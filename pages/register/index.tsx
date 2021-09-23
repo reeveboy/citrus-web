@@ -1,15 +1,14 @@
-import { Formik, Form, Field } from "formik";
-import { MeDocument, MeQuery, useLoginMutation, useMeQuery } from "../generated/index";
+import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
-import withApollo from "../lib/withApollo";
-import { useEffect } from "react";
-import Layout from "../components/Layout";
+import { MeDocument, MeQuery, useMeQuery, useRegisterMutation } from "../../generated";
+import withApollo from "../../lib/withApollo";
+import {useEffect} from 'react'
+import Layout from "../../components/Layout";
 import Link from 'next/link'
-import Layout2 from "../components/Layout2";
+import Layout2 from "../../components/Layout2";
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
-  const [login] = useLoginMutation();
 
   // Auth ---> Start
   const { data, loading } = useMeQuery();
@@ -21,6 +20,8 @@ const Login = () => {
   }, [user, loading]);
   // Auth ---> End
 
+  const [register] = useRegisterMutation()
+
   if (loading || user) {
     return (
     <Layout2>
@@ -28,37 +29,43 @@ const Login = () => {
     </Layout2>
     );
   }
+
   return (
     <Layout2>
-        <h3 className="text-3xl font-semibold">Login</h3>
+        <h3 className="text-3xl font-semibold">Register</h3>
         <p className="mt-1">
-          Don't have an account?{" "}
-          <Link href="/register" >
+          Already have an account?{" "}
+          <Link href="/login" >
             <a className="text-blueLight hover:text-blueDark">
-              Sign up
+              Sign in
             </a>
           </Link>
         </p>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ name: "", email: "", password: "" }}
           onSubmit={async (values, { setSubmitting }) => {
-            setSubmitting(true)
-            const res = await login({
-              variables: values,
-              update: (cache, { data: data_login }) => {
-                cache.writeQuery<MeQuery>({
-                  query: MeDocument,
-                  data: {
-                    __typename: "Query",
-                    me: data_login.login,
-                  },
-                });
-              },
-            });
+            setSubmitting(true);
+            
+            const res = 'ues'
+            // const res = await register({
+            //   variables: values,
+            //   update: (cache, { data: data_register }) => {
+            //     cache.writeQuery<MeQuery>({
+            //       query: MeDocument,
+            //       data: {
+            //         __typename: "Query",
+            //         me: data_register.register,
+            //       },
+            //     });
+            //   },
+            // });
+
             setSubmitting(false);
+
             if (res) {
-              router.push('/dashboard')
+              router.push('/register/confirm')
             }
+
           }}>
           {({ isSubmitting, handleChange, handleBlur, values }) => (
             <Form className="w-4/5">
@@ -74,6 +81,16 @@ const Login = () => {
               />
               <input
                 className="shadow-md appearance-none w-full mt-4 border rounded py-2 px-3 text-grey-darker"
+                name="name"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+                placeholder="Enter your restuarant name"
+                type="text"
+                autoComplete="off"
+              />
+              <input
+                className="shadow-md appearance-none w-full mt-4 border rounded py-2 px-3 text-grey-darker"
                 name="password"
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -82,19 +99,16 @@ const Login = () => {
                 type="password"
               />
               <button
-                className="hover:bg-blue-700 shadow bg-blue-500 text-white text-center rounded mt-4 px-3 py-2 w-full "
+                className="hover:bg-blue-700 shadow bg-blue-500 text-white text-center rounded mt-4 px-3 py-2 w-full"
                 type="submit"
                 disabled={isSubmitting}>
-                Log in
+                  Sign up
               </button>
             </Form>
           )}
         </Formik>
-        <a href="#" className="mt-2 text-sm text-blue-500">
-          Forgot Password?
-        </a>
     </Layout2>
   );
 };
 
-export default withApollo(Login);
+export default withApollo(Register);

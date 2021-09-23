@@ -30,3 +30,17 @@ a {
   text-decoration: none;
   color: #000;
 }
+
+/* Input type number arrows --- Start */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+/* Input type number arrows --- End */

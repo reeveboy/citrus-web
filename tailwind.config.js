@@ -29,6 +29,9 @@ module.exports = {
       sideBarButtonHover: "#999FAB",
       sideBarActiveButton: "#80B2FE",
       sideBarActiveButtonHover: "#5196FF",
+      blueLight: "#00ACD3",
+      blueDark: "#0098BA",
+      greyText: "#C5C5C5",
     },
   },
   variants: {
