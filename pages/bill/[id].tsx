@@ -21,6 +21,9 @@ const Bill = () => {
     if (!(user || loading)) {
       router.push("/login");
     }
+    if ((!(user?.confirmed || loading))) {
+      router.push('/register/confirm')
+    }
   }, [user, loading]);
   // Auth Part - End
 
@@ -39,7 +42,7 @@ const Bill = () => {
     router.push('/dashboard')
   }
 
-  if (loading || !user || b_loading || i_loading) {
+  if (loading || !user || !user.confirmed || b_loading || i_loading) {
     return (
     <Layout>
       <div>Loading..</div>

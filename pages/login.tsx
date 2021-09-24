@@ -9,7 +9,7 @@ import Layout2 from "../components/Layout2";
 
 const Login = () => {
   const router = useRouter();
-  const [login] = useLoginMutation();
+  const [login, {loading: login_loading}] = useLoginMutation();
 
   // Auth ---> Start
   const { data, loading } = useMeQuery();
@@ -21,7 +21,7 @@ const Login = () => {
   }, [user, loading]);
   // Auth ---> End
 
-  if (loading || user) {
+  if (loading || user || login_loading) {
     return (
     <Layout2>
       <div>Loading..</div>

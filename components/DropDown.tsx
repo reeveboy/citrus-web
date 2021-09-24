@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Link from "next/link";
-import { useLogoutMutation } from "../generated";
+import { MeDocument, useLogoutMutation } from "../generated";
 import Router from "next/router";
 
 function classNames(...classes) {
@@ -9,7 +9,7 @@ function classNames(...classes) {
 }
 
 export default function DropDown() {
-  const [logout] = useLogoutMutation();
+  const [logout] = useLogoutMutation({ refetchQueries: [MeDocument] });
 
   const handleLogout = async () => {
     await logout();

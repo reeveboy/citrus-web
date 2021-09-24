@@ -17,6 +17,9 @@ function Dashboard() {
     if (!(user || loading)) {
       router.push("/login");
     }
+    if ((!(user?.confirmed || loading))) {
+      router.push('/register/confirm')
+    }
   }, [user, loading]);
   // Auth Part - End
   
@@ -26,7 +29,7 @@ function Dashboard() {
     refetch()
   }, [])
 
-  if (loading || !user || b_loading) {
+  if (loading || !user || !user.confirmed || b_loading) {
     return (
       <Layout>
         <div>Loading..</div>

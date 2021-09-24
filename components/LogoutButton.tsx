@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useLogoutMutation } from "../generated";
+import { MeDocument, useLogoutMutation } from "../generated";
 import Router from "next/router";
 import { Modal, Button } from "react-bootstrap";
 
 const LogoutButton = () => {
   const [modalShow, setModalShow] = useState(false);
 
-  const [logout] = useLogoutMutation();
+  const [logout] = useLogoutMutation({ refetchQueries: [MeDocument] });
 
   const handleClose = () => {
     setModalShow(false);

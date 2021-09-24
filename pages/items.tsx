@@ -17,6 +17,9 @@ const items = () => {
     if (!(user || loading)) {
       router.push("/login");
     }
+    if ((!(user?.confirmed || loading))) {
+      router.push('/register/confirm')
+    }
   }, [user, loading]);
   // Auth Part - End
 
@@ -34,7 +37,7 @@ const items = () => {
     setSearch(e.target.value)
   }
 
-  if (loading || !user || i_loading || c_loading ) {
+  if (loading || !user || !user?.confirmed || i_loading || c_loading ) {
     return (
     <Layout>
       <div>Loading..</div>

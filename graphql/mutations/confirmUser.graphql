@@ -1,0 +1,3 @@
+mutation ConfirmUser($code: String!) {
+  confirmUser(code: $code)
+}

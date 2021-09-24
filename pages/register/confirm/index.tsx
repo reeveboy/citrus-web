@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, {useEffect, useState} from "react";
 import Layout2 from "../../../components/Layout2";
-import { useMeQuery } from "../../../generated";
+import { MeDocument, useConfirmUserMutation, useMeQuery, useResendVerificationCodeMutation } from "../../../generated";
 import withApollo from "../../../lib/withApollo";
 
 function classNames(...classes) {
@@ -15,7 +15,7 @@ const index = () => {
   const { data, loading } = useMeQuery();
   const user = data?.me;
   useEffect(() => {
-    if (user && !loading) {
+    if (user && !loading && user.confirmed) {
       router.push("/dashboard");
     }
   }, [user, loading]);
@@ -23,6 +23,12 @@ const index = () => {
 
   const [code, setCode] = useState('')
   const [isFocus, setIsFocus] = useState(false)
+
+  const [confirmUser, {loading: confirm_loading}] = useConfirmUserMutation({refetchQueries: [MeDocument]})
+
+  const [resendVerificationCode] = useResendVerificationCodeMutation()
+
+  // const [disableBtn, setDisableBtn] = useState(false)
 
   const handleChange = (e) => {
     const input = e.target.value
@@ -32,19 +38,32 @@ const index = () => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (code.length < 6) {
       return
     }
 
-    console.log(code)
-    // setCode('')
-    // setIsFocus(false)
+    const res = await confirmUser({variables: {code}})
+
+    if (!res.data.confirmUser) {
+      setCode('')
+      return
+    }
+
+    router.push('/dashboard')
   }
 
-  if (loading || user) {
+  const handleResendCode = async () => {
+    // if (disableBtn) {
+    //   return
+    // }
+
+    await resendVerificationCode()
+  }
+
+  if (loading || !user || confirm_loading) {
     return (
     <Layout2>
       <div>Loading..</div>
@@ -66,37 +85,43 @@ const index = () => {
       <div className="flex flex-col items-center relative">
         <span className={classNames(
           isFocus ? "text-greyText" : "text-black",
-          "mt-2 text-3xl"
+          "mt-2 text-3xl tracking-widest"
         )}>
           <span className={classNames(
-            code[0] ? 'text-black' : '', 
-          )}>{code[0] ? code[0] : '0'} </span>
+            code[0] ? 'text-black' : '',
+              'border-b border-black' 
+          )}>{code[0] ? code[0] : '0'}</span>&nbsp;
           <span className={classNames(
-            code[1] ? 'text-black' : ''
-          )}>{code[1] ? code[1] : '0'} </span>
+            code[1] ? 'text-black' : '',
+            'border-b border-black'
+          )}>{code[1] ? code[1] : '0'}</span>&nbsp;
           <span className={classNames(
-            code[2] ? 'text-black' : ''
-          )}>{code[2] ? code[2] : '0'} </span>
+            code[2] ? 'text-black' : '',
+            'border-b border-black'
+          )}>{code[2] ? code[2] : '0'}</span>&nbsp;
           <span className={classNames(
-            code[3] ? 'text-black' : ''
-          )}>{code[3] ? code[3] : '0'} </span>
+            code[3] ? 'text-black' : '',
+            'border-b border-black'
+          )}>{code[3] ? code[3] : '0'}</span>&nbsp;
           <span className={classNames(
-            code[4] ? 'text-black' : ''
-          )}>{code[4] ? code[4] : '0'} </span>
+            code[4] ? 'text-black' : '',
+            'border-b border-black'
+          )}>{code[4] ? code[4] : '0'}</span>&nbsp;
           <span className={classNames(
-            code[5] ? 'text-black' : ''
-          )}>{code[5] ? code[5] : '0'} </span>
+            code[5] ? 'text-black' : '',
+            'border-b border-black'
+          )}>{code[5] ? code[5] : '0'}</span>&nbsp;
         </span>
         <form onSubmit={handleSubmit} className="absolute top-3 opacity-0" onFocus={() => setIsFocus(true)} onBlur={() => setIsFocus(false)}>
           <input onChange={handleChange} type="text" value={code} maxLength={6}  className="px-1 py-1" />
         </form>
       </div>
-      <button onClick={handleSubmit} className='mt-2 text-center text-white rounded-lg px-3 py-2 bg-blue-500 hover:bg-blue-700'>
+      <button onClick={handleSubmit} className='mt-3 text-center text-white rounded-lg px-3 py-2 bg-blue-500 hover:bg-blue-700'>
         Submit
       </button>
       <span className="mt-2 text-sm font-light text-center">
         It may take a minute to recieve your code.
-        Haven’t recieved it? <span className="text-blueLight hover:text-blueDark" style={{cursor: 'pointer'}}>Resend a new code.</span> 
+        Haven’t recieved it? <span onClick={handleResendCode} className="text-blueLight hover:text-blueDark" style={{cursor: 'pointer'}}>Resend a new code.</span> 
       </span>
     </Layout2>
   );

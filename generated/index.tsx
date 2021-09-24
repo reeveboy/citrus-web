@@ -67,6 +67,7 @@ export type Mutation = {
   register: User;
   login?: Maybe<User>;
   confirmUser: Scalars['Boolean'];
+  resendVerificationCode: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
   changePassword?: Maybe<User>;
   logout: Scalars['Boolean'];
@@ -95,7 +96,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationConfirmUserArgs = {
-  token: Scalars['String'];
+  code: Scalars['String'];
 };
 
 
@@ -209,6 +210,7 @@ export type User = {
   user_id: Scalars['ID'];
   name: Scalars['String'];
   email: Scalars['String'];
+  confirmed: Scalars['Boolean'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -230,6 +232,13 @@ export type AddOrderMutationVariables = Exact<{
 
 
 export type AddOrderMutation = { __typename?: 'Mutation', addOrder: boolean };
+
+export type ConfirmUserMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type ConfirmUserMutation = { __typename?: 'Mutation', confirmUser: boolean };
 
 export type CreateBillMutationVariables = Exact<{
   table_no: Scalars['Int'];
@@ -266,7 +275,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string, createdAt: string, updatedAt: string }> };
+export type LoginMutation = { __typename?: 'Mutation', login?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string, createdAt: string, updatedAt: string, confirmed: boolean }> };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -280,7 +289,12 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', user_id: string, name: string, email: string, createdAt: string, updatedAt: string } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', user_id: string, name: string, email: string, createdAt: string, updatedAt: string, confirmed: boolean } };
+
+export type ResendVerificationCodeMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ResendVerificationCodeMutation = { __typename?: 'Mutation', resendVerificationCode: boolean };
 
 export type SettleBillMutationVariables = Exact<{
   bill_id: Scalars['Int'];
@@ -340,7 +354,7 @@ export type IsLoggedQuery = { __typename?: 'Query', isLogged: boolean };
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', user_id: string, name: string, email: string, confirmed: boolean }> };
 
 
 export const AddItemDocument = gql`
@@ -414,6 +428,37 @@ export function useAddOrderMutation(baseOptions?: Apollo.MutationHookOptions<Add
 export type AddOrderMutationHookResult = ReturnType<typeof useAddOrderMutation>;
 export type AddOrderMutationResult = Apollo.MutationResult<AddOrderMutation>;
 export type AddOrderMutationOptions = Apollo.BaseMutationOptions<AddOrderMutation, AddOrderMutationVariables>;
+export const ConfirmUserDocument = gql`
+    mutation ConfirmUser($code: String!) {
+  confirmUser(code: $code)
+}
+    `;
+export type ConfirmUserMutationFn = Apollo.MutationFunction<ConfirmUserMutation, ConfirmUserMutationVariables>;
+
+/**
+ * __useConfirmUserMutation__
+ *
+ * To run a mutation, you first call `useConfirmUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useConfirmUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [confirmUserMutation, { data, loading, error }] = useConfirmUserMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useConfirmUserMutation(baseOptions?: Apollo.MutationHookOptions<ConfirmUserMutation, ConfirmUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ConfirmUserMutation, ConfirmUserMutationVariables>(ConfirmUserDocument, options);
+      }
+export type ConfirmUserMutationHookResult = ReturnType<typeof useConfirmUserMutation>;
+export type ConfirmUserMutationResult = Apollo.MutationResult<ConfirmUserMutation>;
+export type ConfirmUserMutationOptions = Apollo.BaseMutationOptions<ConfirmUserMutation, ConfirmUserMutationVariables>;
 export const CreateBillDocument = gql`
     mutation CreateBill($table_no: Int!) {
   createBill(table_no: $table_no) {
@@ -552,6 +597,7 @@ export const LoginDocument = gql`
     email
     createdAt
     updatedAt
+    confirmed
   }
 }
     `;
@@ -620,6 +666,7 @@ export const RegisterDocument = gql`
     email
     createdAt
     updatedAt
+    confirmed
   }
 }
     `;
@@ -651,6 +698,36 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ResendVerificationCodeDocument = gql`
+    mutation ResendVerificationCode {
+  resendVerificationCode
+}
+    `;
+export type ResendVerificationCodeMutationFn = Apollo.MutationFunction<ResendVerificationCodeMutation, ResendVerificationCodeMutationVariables>;
+
+/**
+ * __useResendVerificationCodeMutation__
+ *
+ * To run a mutation, you first call `useResendVerificationCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResendVerificationCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resendVerificationCodeMutation, { data, loading, error }] = useResendVerificationCodeMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResendVerificationCodeMutation(baseOptions?: Apollo.MutationHookOptions<ResendVerificationCodeMutation, ResendVerificationCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResendVerificationCodeMutation, ResendVerificationCodeMutationVariables>(ResendVerificationCodeDocument, options);
+      }
+export type ResendVerificationCodeMutationHookResult = ReturnType<typeof useResendVerificationCodeMutation>;
+export type ResendVerificationCodeMutationResult = Apollo.MutationResult<ResendVerificationCodeMutation>;
+export type ResendVerificationCodeMutationOptions = Apollo.BaseMutationOptions<ResendVerificationCodeMutation, ResendVerificationCodeMutationVariables>;
 export const SettleBillDocument = gql`
     mutation SettleBill($bill_id: Int!) {
   settleBill(bill_id: $bill_id)
@@ -954,6 +1031,7 @@ export const MeDocument = gql`
     user_id
     name
     email
+    confirmed
   }
 }
     `;

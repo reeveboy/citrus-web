@@ -3,5 +3,6 @@ query Me {
     user_id
     name
     email
+    confirmed
   }
 }

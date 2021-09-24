@@ -20,9 +20,9 @@ const Register = () => {
   }, [user, loading]);
   // Auth ---> End
 
-  const [register] = useRegisterMutation()
+  const [register, {loading: register_loading}] = useRegisterMutation()
 
-  if (loading || user) {
+  if (loading || user || register_loading) {
     return (
     <Layout2>
       <div>Loading..</div>
@@ -46,19 +46,18 @@ const Register = () => {
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
             
-            const res = 'ues'
-            // const res = await register({
-            //   variables: values,
-            //   update: (cache, { data: data_register }) => {
-            //     cache.writeQuery<MeQuery>({
-            //       query: MeDocument,
-            //       data: {
-            //         __typename: "Query",
-            //         me: data_register.register,
-            //       },
-            //     });
-            //   },
-            // });
+            const res = await register({
+              variables: values,
+              update: (cache, { data: data_register }) => {
+                cache.writeQuery<MeQuery>({
+                  query: MeDocument,
+                  data: {
+                    __typename: "Query",
+                    me: data_register.register,
+                  },
+                });
+              },
+            });
 
             setSubmitting(false);
 
