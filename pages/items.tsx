@@ -16,6 +16,7 @@ const items = () => {
   useEffect(() => {
     if (!(user || loading)) {
       router.push("/login");
+      return
     }
     if ((!(user?.confirmed || loading))) {
       router.push('/register/confirm')

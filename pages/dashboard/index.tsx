@@ -16,8 +16,9 @@ function Dashboard() {
   useEffect(() => {
     if (!(user || loading)) {
       router.push("/login");
+      return
     }
-    if ((!(user?.confirmed || loading))) {
+    if (!(user?.confirmed || loading)) {
       router.push('/register/confirm')
     }
   }, [user, loading]);
