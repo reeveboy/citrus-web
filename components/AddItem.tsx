@@ -64,7 +64,7 @@ const AddItem = ({ categories }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.category_id}>
-                <option value="" selected>
+                <option value="" defaultValue="">
                   Select a Category
                 </option>
                 {categories.map((category, idx) => (

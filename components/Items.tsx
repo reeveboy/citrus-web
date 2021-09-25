@@ -22,7 +22,7 @@ const Items = ({ items, categories }) => {
               <td className="border py-2 ">
                 <DelItemButton item_id={item.item_id} />
               </td>
-              <td className="border py-2">{item.item_id}</td>
+              <td className="border py-2">{++idx}</td>
               <td className="border py-2 truncate">{item.name}</td>
               <td className="border py-2">
                 <span>&#8377;</span>

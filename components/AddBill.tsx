@@ -34,14 +34,16 @@ const AddBill = () => {
         </Modal.Header>
         <Modal.Body className="flex justify-center">
           <Formik
-            initialValues={{ tableNo: null }}
+            initialValues={{ tableNo: "" }}
             onSubmit={async (values, { setSubmitting, resetForm }) => {
               setSubmitting(true);
               if (!values.tableNo) {
                 setSubmitting(false);
                 return;
               }
-              await createBill({ variables: { table_no: values.tableNo } });
+              await createBill({
+                variables: { table_no: parseInt(values.tableNo, 10) },
+              });
 
               setSubmitting(false);
               resetForm();

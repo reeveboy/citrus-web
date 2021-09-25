@@ -6,9 +6,9 @@ import TypeAhead from "../../components/TypeAhead";
 import { GetBillDocument, GetUnsettledBillsDocument, useAddOrderMutation, useDeleteBillMutation, useGetBillQuery, useGetItemsQuery, useMeQuery, useSettleBillMutation } from "../../generated";
 import withApollo from "../../lib/withApollo";
 import {Form as form} from 'react-bootstrap'
-import PlusBtn from "../../components/PlusBtn";
 import DeleteBillButton from "../../components/DeleteBillButton";
 import Layout from "../../components/Layout";
+
 
 
 const Bill = () => {
@@ -64,26 +64,27 @@ const Bill = () => {
             <span className="text-3xl font">T - {bill.getBill.table_no}</span>
             <div>
               <Formik
-                initialValues={{ quantity: null }}
+                initialValues={{ quantity: '' }}
                 onSubmit={async (values, { setSubmitting }) => {
                   setSubmitting(true)
+
                   if (selected.length === 0) {
                     setSubmitting(false);
                     return
                   }
-                  if (values.quantity === 0 || values.quantity === null) {
+                  if (values.quantity === '0' || values.quantity === '') {
                     setSubmitting(false);
                     return
                   }
-                  await addOrder({variables: {bill_id, item_id: parseInt(selected[0].item_id), quantity: values.quantity}})
+                  await addOrder({variables: {bill_id, item_id: parseInt(selected[0].item_id), quantity: parseInt(values.quantity, 10)}})
 
-                  values.quantity = '1'
+                  values.quantity = ''
                   setSelected([])
                   setSubmitting(false);
                 }}>
                 {({ handleChange, handleBlur, values, isSubmitting }) => (
                   <Form className="flex">
-                    <TypeAhead items={items} setSelected={setSelected} />
+                    <TypeAhead items={items} setSelected={setSelected} isSubmitting={isSubmitting} />
                     
                     <form.Control 
                       className="ml-2"
@@ -98,10 +99,18 @@ const Bill = () => {
                     />
 
                     <button
-                      className="ml-2"
+                      className="ml-2 w-10 h-10 bg-emerald rounded-full flex justify-center items-center hover:bg-emeraldDark"
                       type="submit"
                       disabled={isSubmitting}>
-                      <PlusBtn />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="bi bi-plus text-white"
+                        width="40"
+                        height="40"
+                        fill="currentColor"
+                        viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                      </svg>
                     </button>
                     
                   </Form>

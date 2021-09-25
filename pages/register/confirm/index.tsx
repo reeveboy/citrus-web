@@ -17,6 +17,10 @@ const index = () => {
   useEffect(() => {
     if (user && !loading && user.confirmed) {
       router.push("/dashboard");
+      return
+    }
+    if (!user && !loading) {
+      router.push('/register')
     }
   }, [user, loading]);
   // Auth ---> End

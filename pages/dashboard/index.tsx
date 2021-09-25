@@ -70,7 +70,7 @@ function Dashboard() {
           <AddBill />
         </div>
           <div className="grid gap-10 grid-cols-5 p-10">
-            {bills.getUnsettledBills.map((bill) => (<BillCard bill={bill} />))}
+            {bills.getUnsettledBills.map((bill, idx) => (<BillCard key={idx} bill={bill} />))}
           </div>
       </div>
     </Layout>

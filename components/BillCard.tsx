@@ -23,8 +23,8 @@ const BillCard = ({ bill }) => {
             <div className="p-2" style={{ flex: "6" }}>
               {bill.firstThreeOrders.length !== 0 ? (
                 <div className="flex flex-col">
-                  {bill.firstThreeOrders.map((order) => (
-                    <div className="flex justify-between">
+                  {bill.firstThreeOrders.map((order, idx) => (
+                    <div key={idx} className="flex justify-between">
                       <span className="font-extralight truncate">
                         {order.itemName}
                       </span>
