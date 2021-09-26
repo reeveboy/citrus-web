@@ -24,9 +24,13 @@ export type Bills = {
   __typename?: 'Bills';
   bill_id: Scalars['ID'];
   table_no: Scalars['Float'];
+  total: Scalars['Float'];
   netAmount: Scalars['Float'];
   ownerId: Scalars['Float'];
   orders: Array<Orders>;
+  discount: Scalars['Float'];
+  offer: Scalars['Float'];
+  tax: Scalars['Float'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
   firstThreeOrders?: Maybe<Array<Orders>>;
@@ -77,6 +81,7 @@ export type Mutation = {
   createBill: Bills;
   deleteBill: Scalars['Boolean'];
   settleBill: Scalars['Boolean'];
+  addOffer: Scalars['Boolean'];
   addOrder: Scalars['Boolean'];
   updateOrder: Scalars['Boolean'];
   deleteOrder: Scalars['Boolean'];
@@ -136,6 +141,12 @@ export type MutationDeleteBillArgs = {
 
 
 export type MutationSettleBillArgs = {
+  bill_id: Scalars['Int'];
+};
+
+
+export type MutationAddOfferArgs = {
+  discount: Scalars['Float'];
   bill_id: Scalars['Int'];
 };
 
@@ -223,6 +234,14 @@ export type AddItemMutationVariables = Exact<{
 
 
 export type AddItemMutation = { __typename?: 'Mutation', addItem: { __typename?: 'Item', item_id: string, name: string, rate: number, category_name: string } };
+
+export type AddOfferMutationVariables = Exact<{
+  bill_id: Scalars['Int'];
+  discount: Scalars['Float'];
+}>;
+
+
+export type AddOfferMutation = { __typename?: 'Mutation', addOffer: boolean };
 
 export type AddOrderMutationVariables = Exact<{
   bill_id: Scalars['Int'];
@@ -327,7 +346,7 @@ export type GetBillQueryVariables = Exact<{
 }>;
 
 
-export type GetBillQuery = { __typename?: 'Query', getBill?: Maybe<{ __typename?: 'Bills', bill_id: string, table_no: number, netAmount: number, createdAt: string, orders: Array<{ __typename?: 'Orders', item_id: number, quantity: number, total: number, itemName: string, itemRate: string }> }> };
+export type GetBillQuery = { __typename?: 'Query', getBill?: Maybe<{ __typename?: 'Bills', bill_id: string, table_no: number, total: number, offer: number, tax: number, discount: number, netAmount: number, createdAt: string, orders: Array<{ __typename?: 'Orders', item_id: number, quantity: number, total: number, itemName: string, itemRate: string }> }> };
 
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -395,6 +414,38 @@ export function useAddItemMutation(baseOptions?: Apollo.MutationHookOptions<AddI
 export type AddItemMutationHookResult = ReturnType<typeof useAddItemMutation>;
 export type AddItemMutationResult = Apollo.MutationResult<AddItemMutation>;
 export type AddItemMutationOptions = Apollo.BaseMutationOptions<AddItemMutation, AddItemMutationVariables>;
+export const AddOfferDocument = gql`
+    mutation AddOffer($bill_id: Int!, $discount: Float!) {
+  addOffer(bill_id: $bill_id, discount: $discount)
+}
+    `;
+export type AddOfferMutationFn = Apollo.MutationFunction<AddOfferMutation, AddOfferMutationVariables>;
+
+/**
+ * __useAddOfferMutation__
+ *
+ * To run a mutation, you first call `useAddOfferMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddOfferMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addOfferMutation, { data, loading, error }] = useAddOfferMutation({
+ *   variables: {
+ *      bill_id: // value for 'bill_id'
+ *      discount: // value for 'discount'
+ *   },
+ * });
+ */
+export function useAddOfferMutation(baseOptions?: Apollo.MutationHookOptions<AddOfferMutation, AddOfferMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddOfferMutation, AddOfferMutationVariables>(AddOfferDocument, options);
+      }
+export type AddOfferMutationHookResult = ReturnType<typeof useAddOfferMutation>;
+export type AddOfferMutationResult = Apollo.MutationResult<AddOfferMutation>;
+export type AddOfferMutationOptions = Apollo.BaseMutationOptions<AddOfferMutation, AddOfferMutationVariables>;
 export const AddOrderDocument = gql`
     mutation AddOrder($bill_id: Int!, $item_id: Int!, $quantity: Int!) {
   addOrder(input: {bill_id: $bill_id, item_id: $item_id, quantity: $quantity})
@@ -838,6 +889,10 @@ export const GetBillDocument = gql`
   getBill(bill_id: $bill_id) {
     bill_id
     table_no
+    total
+    offer
+    tax
+    discount
     netAmount
     orders {
       item_id

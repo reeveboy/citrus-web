@@ -1,0 +1,3 @@
+mutation AddOffer($bill_id: Int!, $discount: Float!) {
+  addOffer(bill_id: $bill_id, discount: $discount)
+}

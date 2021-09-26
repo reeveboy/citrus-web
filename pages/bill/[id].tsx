@@ -8,6 +8,7 @@ import withApollo from "../../lib/withApollo";
 import {Form as form} from 'react-bootstrap'
 import DeleteBillButton from "../../components/DeleteBillButton";
 import Layout from "../../components/Layout";
+import AddOfferButton from '../../components/AddOfferButton'
 
 
 
@@ -126,19 +127,21 @@ const Bill = () => {
             <div className="flex flex-col">
               <div className="flex flex-row justify-between">
                 <span className="text-xl">Total: </span>
-                <span className="text-xl">&#8377;{bill.getBill.netAmount}.00</span>
+                <span className="text-xl">&#8377;{bill.getBill.total.toFixed(2)}</span>
               </div>
               <div className="mt-1 flex flex-row justify-between items-center">
-                <button className="text-xl bg-blueLight px-1 py-1 rounded-lg text-white hover:bg-blueDark">Offers: </button>
-                <span className="text-xl">&#8377;0.00</span>
+                <AddOfferButton bill_id={bill_id} discount={bill.getBill.discount} />
+                <span className="text-xl">-&nbsp;&#8377;{bill.getBill.offer.toFixed(2)}</span>
               </div>
               <div className="mt-2 flex flex-row justify-between items-center">
-                <button className="text-xl bg-redLight px-1 py-1 rounded-lg text-white hover:bg-redDark">Tax: </button>
-                <span className="text-xl">&#8377;0.00</span>
+                <button className="text-xl bg-redLight px-1 py-1 rounded-lg text-white hover:bg-redDark">
+                  Tax <span className="text-base">@5%</span>: 
+                </button>
+                <span className="text-xl">&#8377;{bill.getBill.tax.toFixed(2)}</span>
               </div>
               <div className="mt-2 flex flex-row justify-between">
                 <span className="text-xl">Net Amount: </span>
-                <span className="text-xl">&#8377;{bill.getBill.netAmount}.00</span>
+                <span className="text-xl">&#8377;{bill.getBill.netAmount.toFixed(2)}</span>
               </div>
             </div>
             <div className="flex justify-center mt-4">

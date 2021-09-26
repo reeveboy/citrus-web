@@ -23,7 +23,6 @@ const TypeAhead = ({ items, setSelected, isSubmitting }) => {
         paginate={true}
         minLength={1}
         placeholder="Search Item..."
-        clearButton={true}
         ref={ref}
       />
     </>

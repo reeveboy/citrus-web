@@ -2,6 +2,10 @@ query GetBill($bill_id: Int!) {
   getBill(bill_id: $bill_id) {
     bill_id
     table_no
+    total
+    offer
+    tax
+    discount
     netAmount
     orders {
       item_id
