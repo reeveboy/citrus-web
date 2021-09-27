@@ -4,6 +4,9 @@ The frontend side of the fullstack-graphql project called citrus. Made using Nex
 
 This is web application for restuarants to help manage, display and store their data and transactions of all customers in their restuarant
 
+## Server Link:-
+https://github.com/reeveboy/citrus-server
+
 ## Screenshots
 - /dashboard
 <img width="959" alt="Screenshot 2021-09-27 122519" src="https://user-images.githubusercontent.com/81756283/134859134-c03cde34-633b-49e3-be00-35f25c57ac6d.png">
