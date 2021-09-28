@@ -2,7 +2,7 @@
 
 The frontend side of the fullstack-graphql project called citrus. Made using Nextjs with TypeScript.
 
-This is web application for restuarants to help manage, display and store their data and transactions of all customers in their restuarant
+This is web application for restaurants to help manage, display and store their data and transactions of all customers in their restaurant
 
 ## Server Link:-
 https://github.com/reeveboy/citrus-server
